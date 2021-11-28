@@ -1,0 +1,188 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+  \usepackage{amssymb}
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Supplement: Evidence of traumatic brain injury in muskoxen (Ovibos moschatus). Code for heatmaps and linegraphs},
+  pdfauthor={Nicole Ackermans},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Supplement: Evidence of traumatic brain injury in muskoxen
+(Ovibos moschatus). Code for heatmaps and linegraphs}
+\author{Nicole Ackermans}
+\date{11/15/2021}
+
+\begin{document}
+\maketitle
+
+Packages library(ggplot2) library(readxl) library(plotly)
+library(ggpubr) library(viridis) Heatmaps Muskox 1 / MO1 / Generic 0191
+Read in data NTCs \textless- read\_excel(``NA\_BHP\_Supp\_211022.xlsx'',
+sheet=3) neuropils \textless-
+read\_excel(``NA\_BHP\_Supp\_211022.xlsx'', sheet=4) neurons \textless-
+read\_excel(``NA\_BHP\_Supp\_211022.xlsx'', sheet=5) Heat Map 1
+Muskox1\_heatmap \textless- ggplot(neuropils, aes(x=x, y=y))+
+stat\_density\_2d(aes(fill=..level..), geom=``polygon'')+
+scale\_fill\_viridis\_c(option = ``viridis'', alpha=0.7)+
+geom\_point(data=NTCs, color=``black'', size=2, alpha=0.5)+
+geom\_point(data=neurons, shape=23, colour=``pink'', fill=``pink'',
+size=2, alpha=0.8)+ labs(title=``A'')+ theme\_void()
+
+Muskox1\_heatmap
+
+Muskox 2 / MO2 / Generic 0194 Read in data NTCs \textless-
+read\_excel(``NA\_BHP\_Supp\_211022.xlsx'', sheet=6) neuropils
+\textless- read\_excel(``NA\_BHP\_Supp\_211022.xlsx'', sheet=7) neurons
+\textless- read\_excel(``NA\_BHP\_Supp\_211022.xlsx'', sheet=8) Heat Map
+2 Muskox2\_heatmap \textless- ggplot(neuropils, aes(x=x, y=y))+
+stat\_density\_2d(aes(fill=..level..), geom=``polygon'', bins=20)+
+scale\_fill\_viridis\_c(option = ``viridis'', alpha=0.7)+
+geom\_point(data=NTCs, color=``black'', size=1, alpha=0.5)+
+geom\_point(data=neurons, shape=23, colour=``pink'', fill=``pink'',
+size=2, alpha=0.8)+ labs(title=``B'')+ theme\_void()
+
+Muskox2\_heatmap
+
+Muskox 3 / MO3 / Generic 0193 Read in data NTCs \textless-
+read\_excel(``NA\_BHP\_Supp\_211022.xlsx'', sheet=9) neuropils
+\textless- read\_excel(``NA\_BHP\_Supp\_211022.xlsx'', sheet=10) neurons
+\textless- read\_excel(``NA\_BHP\_Supp\_211022.xlsx'', sheet=11) Heat
+map 3 Muskox3\_heatmap \textless- ggplot(neuropils, aes(x=x, y=y))+
+stat\_density\_2d(aes(fill=..level..), geom=``polygon'')+
+scale\_fill\_viridis\_c(option = ``viridis'', alpha=0.7)+
+geom\_point(data=NTCs, color=``black'', size=2, alpha=0.5)+
+geom\_point(data=neurons, shape=23, colour=``pink'', fill=``pink'',
+size=2, alpha=0.8)+ labs(title=``C'')+ theme\_void() Muskox3\_heatmap \#
+all three together AllHeatmaps\textless-ggarrange(Muskox1\_heatmap,
+Muskox2\_heatmap, Muskox3\_heatmap, nrow=3, common.legend = TRUE,
+legend=``right'')
+
+AllHeatmaps
+
+Linegraphs Read in Data AllData \textless-
+read\_excel(``NA\_BHP\_Supp\_211022.xlsx'', sheet=2) make characters non
+numerical AllData\(Individual<-as.character(AllData\)Individual)
+AllData\(layer<-as.character(AllData\)layer) Subset NTCsub \textless-
+subset(AllData, marker==``NTC'' \& layer==``all'') Neuropilsub
+\textless- subset(AllData, marker==``neuropil'' \& layer==``all'')
+Neuronsub \textless- subset(AllData, marker==``neuron'' \&
+layer==``all'') Marker count per layer per Individual sub\_NTC
+\textless- subset(AllData, marker==``NTC'') sub\_Neuropil \textless-
+subset(AllData, marker==``neuropil'') sub\_Neuron \textless-
+subset(AllData, marker==``neuron'') Make line graphs 3 Individuals NTC
+p1 \textless- ggplot(data=sub\_NTC, aes(x=layer, y=count,
+group=Individual, colour=Individual)) + geom\_line()+ geom\_point()+
+scale\_color\_manual(values=viridis(3))+
+labs(title=``B'',x=element\_blank(), y=element\_blank())+ theme(
+plot.title = element\_text(size=11, hjust=0.5), panel.border =
+element\_blank(),\\
+panel.grid.major = element\_blank(), panel.grid.minor =
+element\_blank(), panel.background = element\_blank(), axis.line =
+element\_blank(), axis.text=element\_text(size=7),
+legend.position=``none'') + geom\_path(size=1)+
+scale\_x\_discrete(limits=c(``I'',``II'',``III'',``IV-VI'',``WM''))
+
+p1 \#\# Warning: Removed 3 row(s) containing missing values
+(geom\_path). \#\# Warning: Removed 3 rows containing missing values
+(geom\_point). \#\# Warning: Removed 3 row(s) containing missing values
+(geom\_path).
+
+3 Individuals Neuropil p2 \textless- ggplot(data=sub\_Neuropil,
+aes(x=layer, y=count, group=Individual, colour=Individual)) +
+geom\_line()+ geom\_point()+ scale\_color\_manual(values=viridis(3))+
+labs(title=``A'',x=element\_blank(), y=element\_blank())+ theme(
+plot.title = element\_text(size=11, hjust=0.5), panel.border =
+element\_blank(),\\
+panel.grid.major = element\_blank(), panel.grid.minor =
+element\_blank(), panel.background = element\_blank(), axis.line =
+element\_blank(), axis.text=element\_text(size=7),
+legend.position=``none'') + geom\_path(size=1)+
+scale\_x\_discrete(limits=c(``I'',``II'',``III'',``IV-VI'',``WM''))
+
+p2 \#\# Warning: Removed 3 row(s) containing missing values
+(geom\_path). \#\# Warning: Removed 3 rows containing missing values
+(geom\_point). \#\# Warning: Removed 3 row(s) containing missing values
+(geom\_path).
+
+3 Individuals Neuron p3 \textless- ggplot(data=sub\_Neuron, aes(x=layer,
+y=count, group=Individual, colour=Individual)) + geom\_line() +
+geom\_point()+ scale\_color\_manual(values=viridis(3))+
+labs(title=``C'',x=``Brain layers'', y=element\_blank())+ theme(
+plot.title = element\_text(size=11, hjust=0.5), panel.border =
+element\_blank(),\\
+panel.grid.major = element\_blank(), panel.grid.minor =
+element\_blank(), panel.background = element\_blank(), axis.line =
+element\_blank(), axis.title.x = element\_text(size=8),
+axis.text=element\_text(size=7)) + geom\_path(size=1)+
+scale\_x\_discrete(limits=c(``I'',``II'',``III'',``IV-VI'',``WM''))
+
+p3 \#\# Warning: Removed 3 row(s) containing missing values
+(geom\_path). \#\# Warning: Removed 3 rows containing missing values
+(geom\_point). \#\# Warning: Removed 3 row(s) containing missing values
+(geom\_path).
+
+\#\#arrange on page all3\textless-ggarrange(p2, p1, p3, nrow=3,
+common.legend = TRUE, legend=``right'')
+all3\textless-annotate\_figure(all3, left=text\_grob(``Estimated
+population / volume''\textasciitilde(mm\^{}3),rot = 90))
+
+all3
+
+\end{document}
