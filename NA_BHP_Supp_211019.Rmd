@@ -1,0 +1,184 @@
+---
+title: "Supplement: Evidence of traumatic brain injury in muskoxen (Ovibos moschatus). Code for heatmaps and linegraphs"
+author: "Nicole Ackermans"
+date: "10/19/2021"
+output:
+  word_document: default
+  html_document: default
+---
+# Packages
+```{r, message = FALSE}
+library(ggplot2)
+library(readxl)
+library(plotly)
+library(ggpubr)
+library(viridis)
+```
+
+# Heatmaps
+# Muskox 1 / MO1 / Generic 0191
+
+## Read in data
+```{r}
+NTCs <- read_excel("NA_BHP_Supp_211022.xlsx", sheet=3)
+neuropils <- read_excel("NA_BHP_Supp_211022.xlsx", sheet=4)
+neurons <- read_excel("NA_BHP_Supp_211022.xlsx", sheet=5)
+```
+
+## Heat Map 1
+```{r, fig.height = 5, fig.width = 7}
+Muskox1_heatmap <- ggplot(neuropils, aes(x=x, y=y))+
+  stat_density_2d(aes(fill=..level..), geom="polygon")+
+  scale_fill_viridis_c(option = "viridis", alpha=0.7)+ 
+  geom_point(data=NTCs, color="black", size=2, alpha=0.5)+
+  geom_point(data=neurons, shape=23, colour="pink", fill="pink", size=2, alpha=0.8)+ 
+  labs(title="A")+
+  theme_void()
+
+Muskox1_heatmap
+```
+
+
+# Muskox 2 / MO2 / Generic 0194
+## Read in data
+```{r}
+NTCs <- read_excel("NA_BHP_Supp_211022.xlsx", sheet=6)
+neuropils <- read_excel("NA_BHP_Supp_211022.xlsx", sheet=7)
+neurons <- read_excel("NA_BHP_Supp_211022.xlsx", sheet=8)
+```
+
+## Heat Map 2
+```{r, fig.height = 5, fig.width = 7}
+Muskox2_heatmap <- ggplot(neuropils, aes(x=x, y=y))+
+  stat_density_2d(aes(fill=..level..), geom="polygon", bins=20)+
+  scale_fill_viridis_c(option = "viridis", alpha=0.7)+ 
+  geom_point(data=NTCs, color="black", size=1, alpha=0.5)+
+  geom_point(data=neurons, shape=23, colour="pink", fill="pink", size=2, alpha=0.8)+ 
+  labs(title="B")+
+  theme_void()
+
+Muskox2_heatmap
+```
+
+# Muskox 3 / MO3 / Generic 0193
+## Read in data
+```{r}
+NTCs <- read_excel("NA_BHP_Supp_211022.xlsx", sheet=9)
+neuropils <- read_excel("NA_BHP_Supp_211022.xlsx", sheet=10)
+neurons <- read_excel("NA_BHP_Supp_211022.xlsx", sheet=11)
+```
+
+## Heat map 3
+```{r, fig.height = 5, fig.width = 7}
+Muskox3_heatmap <- ggplot(neuropils, aes(x=x, y=y))+
+  stat_density_2d(aes(fill=..level..), geom="polygon")+
+  scale_fill_viridis_c(option = "viridis", alpha=0.7)+ 
+  geom_point(data=NTCs, color="black", size=2, alpha=0.5)+
+  geom_point(data=neurons, shape=23, colour="pink", fill="pink", size=2, alpha=0.8)+ 
+  labs(title="C")+
+  theme_void()
+Muskox3_heatmap
+```
+# all three together
+```{r, fig.height = 15, fig.width =7}
+AllHeatmaps<-ggarrange(Muskox1_heatmap, Muskox2_heatmap, Muskox3_heatmap, nrow=3,
+                       common.legend = TRUE, legend="right")
+
+AllHeatmaps
+```
+
+# Linegraphs
+## Read in Data
+```{r}
+AllData <- read_excel("NA_BHP_Supp_211022.xlsx", sheet=2)
+```
+
+## make characters non numerical
+```{r}
+AllData$Individual<-as.character(AllData$Individual)
+AllData$layer<-as.character(AllData$layer)
+```
+
+## Subset
+```{r}
+NTCsub <- subset(AllData, marker=="NTC" & layer=="all")
+Neuropilsub <- subset(AllData, marker=="neuropil" & layer=="all")
+Neuronsub <- subset(AllData, marker=="neuron" & layer=="all")
+```
+
+### Marker count per layer per Individual
+```{r}
+sub_NTC <- subset(AllData, marker=="NTC")
+sub_Neuropil <- subset(AllData, marker=="neuropil")
+sub_Neuron <- subset(AllData, marker=="neuron")
+```
+
+## Make line graphs
+## 3 Individuals NTC
+```{r, fig.height = 5, fig.width = 7}
+p1 <- ggplot(data=sub_NTC, aes(x=layer, y=count, group=Individual, colour=Individual)) + 
+  geom_line()+ geom_point()+ scale_color_manual(values=viridis(3))+
+  labs(title="B",x=element_blank(), y=element_blank())+
+  theme(
+    plot.title = element_text(size=11, hjust=0.5),
+    panel.border = element_blank(),  
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_blank(),
+    axis.text=element_text(size=7),
+    legend.position="none") +
+  geom_path(size=1)+
+  scale_x_discrete(limits=c("I","II","III","IV-VI","WM"))
+
+p1
+```
+
+### 3 Individuals Neuropil
+```{r, fig.height = 5, fig.width = 7}
+p2 <- ggplot(data=sub_Neuropil, aes(x=layer, y=count, group=Individual, colour=Individual)) + 
+  geom_line()+ geom_point()+ scale_color_manual(values=viridis(3))+
+  labs(title="A",x=element_blank(), y=element_blank())+
+  theme(
+    plot.title = element_text(size=11, hjust=0.5),
+    panel.border = element_blank(),  
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_blank(),
+    axis.text=element_text(size=7),
+    legend.position="none") +
+  geom_path(size=1)+
+  scale_x_discrete(limits=c("I","II","III","IV-VI","WM"))
+
+p2
+```
+
+### 3 Individuals Neuron
+```{r, fig.height = 5, fig.width = 7}
+p3 <- ggplot(data=sub_Neuron, aes(x=layer, y=count, group=Individual, colour=Individual)) + 
+  geom_line() + geom_point()+ scale_color_manual(values=viridis(3))+
+  labs(title="C",x="Brain layers", y=element_blank())+
+  theme(
+    plot.title = element_text(size=11, hjust=0.5),
+    panel.border = element_blank(),  
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_blank(),
+    axis.title.x = element_text(size=8),
+    axis.text=element_text(size=7)) +
+  geom_path(size=1)+
+  scale_x_discrete(limits=c("I","II","III","IV-VI","WM"))
+
+p3
+```
+
+##arrange on page
+```{r, fig.height = 15, fig.width = 7}
+all3<-ggarrange(p2, p1, p3, nrow=3, common.legend = TRUE, legend="right")
+
+all3<-annotate_figure(all3, left=text_grob("Estimated population / volume "~(mm^3),rot = 90))
+
+all3
+```
