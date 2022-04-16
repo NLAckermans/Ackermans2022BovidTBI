@@ -1,0 +1,142 @@
+---
+title: "All heatmaps muskoxen"
+author: "Nicole Ackermans"
+date: "3/14/2022"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Libraries
+```{r}
+library(readxl)
+library(tidyverse)
+```
+
+## Imported data
+A is 0191, B is 0194, C is 0193
+```{r}
+Generic0190_pfc<-read_excel("Generic0190_coordinates-all.xlsx")
+Generic0193_pfc<-read_excel("Generic0193_coordinates-all.xlsx")
+Generic0194_pfc<-read_excel("Generic0194_coordinates-all.xlsx")
+Generic0190_parietal<-read_excel("Generic0190parietal_coordinates.xlsx")
+Generic0193_parietal<-read_excel("Generic0193parietal_coordinates.xlsx")
+Generic0194_parietal<-read_excel("Generic0194parietal_coordinates.xlsx")
+
+Generic0190_pfc <- Generic0190_pfc %>%
+  mutate(group = "A")
+
+Generic0193_pfc <- Generic0193_pfc %>%
+  mutate(group = "B")
+
+Generic0194_pfc <- Generic0194_pfc %>%
+  mutate(group = "C")
+
+Generic0190_parietal <- Generic0190_parietal %>%
+  mutate(group = "D")
+
+Generic0193_parietal <- Generic0193_parietal %>%
+  mutate(group = "E")
+
+Generic0194_parietal <- Generic0194_parietal %>%
+  mutate(group = "F")
+
+my_data <- rbind(Generic0190_pfc, Generic0193_pfc, Generic0194_pfc, Generic0190_parietal, Generic0193_parietal, Generic0194_parietal)
+```
+
+# Assign datasets
+```{r}
+Generic0190_pfc <- Generic0190_pfc %>%
+  mutate(group = "A")
+
+Generic0193_pfc <- Generic0193_pfc %>%
+  mutate(group = "B")
+
+Generic0194_pfc <- Generic0194_pfc %>%
+  mutate(group = "C")
+
+Generic0190_parietal <- Generic0190_parietal %>%
+  mutate(group = "D")
+
+Generic0193_parietal <- Generic0193_parietal %>%
+  mutate(group = "E")
+
+Generic0194_parietal <- Generic0194_parietal %>%
+  mutate(group = "F")
+```
+
+#Correction to translate to same point of origin
+#0190_xnew = x0190 - x0913
+#0910_ynew = y0910 + y0913
+"0190_x" <- -25638.20 - -1018.86
+"0190_y" <- -8097.15 + -2581.53
+
+#0194_xnew = x0194 - x0193
+#0194_ynew = y0194 - y0913
+"0194_x" <- -63270.14 - -1018.86	
+"0194_y" <- -4712.48 - -2581.53
+```{r}
+my_data %>%
+  group_by(group) %>%
+  summarize(min_x = min(x),
+            min_y = min(y))
+
+"0190_x" <- -25638.20 - -63270.14
+"0190_y" <- -4712.48 + -8097.15
+
+"0194_x" <- -1018.86 - -63270.14	
+"0194_y" <- -2581.53 - -4712.48
+
+my_data_transform <- my_data %>%
+  mutate(new_x = ifelse(group == "B", paste(x), 
+                        ifelse(group == "A", x - `0190_x`,
+                               ifelse(group == "C", x - `0194_x`, NA
+                                      ))),
+         new_y = ifelse(group == "B", paste(y), 
+                        ifelse(group == "A", y + `0190_y`,
+                               ifelse(group == "C", y - `0194_y`, NA
+                                      )))) %>%
+  mutate(new_x = as.numeric(new_x),
+         new_y = as.numeric(new_y))
+
+my_data_transform
+```
+
+# Min and Max for scale
+```{r}
+min(my_data_transform$new_x)
+
+max(my_data_transform$new_x)
+
+min(my_data_transform$new_y)
+
+max(my_data_transform$new_y)
+```
+
+
+```{r, fig.width = 7, fig.height=15}
+my_data_transform %>%
+  group_by(group) %>%
+  count()
+
+labels <- data.frame(
+  group = c("A", "B", "C"),
+  label = c("n = 2621", "n = 5465", "n = 25446")
+)
+
+my_data_transform %>%
+  ggplot(aes(x = new_x, y = new_y)) +
+  stat_density_2d(aes(fill=..level..), geom="polygon", bins=10)+
+  scale_fill_viridis_c(option = "viridis", alpha=0.7)+ 
+  scale_x_continuous(limits = c(-64000, -8020)) +
+  scale_y_continuous(limits = c(-25000, 29000)) +
+  facet_wrap(~ group, ncol = 1) +
+  geom_text(data = labels, aes(x = -20000, y = 25000, label = label, group = group)) +
+  theme_classic() +
+  theme(strip.background = element_blank())
+
+#ggsave("MuskoxPFC_heatmaps_220312.png", plot=AllHeatmaps, dpi=300)
+```
+

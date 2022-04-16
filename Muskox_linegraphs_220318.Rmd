@@ -1,0 +1,175 @@
+---
+title: "Muskox linegraphs"
+author: "Nicole Ackermans"
+date: "3/14/2022"
+output: word_document
+###Generic 0190, 0193, 0194,PFC and Parietal CP13 tau staining
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Libraries
+```{r}
+library(readxl)
+library(tidyverse)
+library(viridis)
+library(ggpubr)
+```
+
+## Imported data
+0191/old male, 0194/mid female, 0193/old female
+```{r}
+my_data <- read_excel("MuskoxAllData_220317.xlsx")
+```
+
+# Transform
+```{r}
+my_data <- my_data %>%
+  mutate(name = case_when(individual == '0190' ~ 'male', 
+                          individual == '0193' ~ 'oldfemale',
+                          individual == '0194' ~ 'midfemale'))
+
+neuropils_pfc <- my_data %>%
+  filter(Marker == "neuropil thread", block == "pfc")
+
+ntcs_pfc <- my_data %>%
+  filter(Marker == "neuritic thread cluster", block == "pfc")
+
+neurons_pfc <- my_data %>%
+  filter(Marker == "neuron with fib tau", block == "pfc")
+
+neuropils_parietal <- my_data %>%
+  filter(Marker == "neuropil thread", block == "parietal")
+
+ntcs_parietal <- my_data %>%
+  filter(Marker == "neuritic thread cluster", block == "parietal")
+
+neurons_parietal <- my_data %>%
+  filter(Marker == "neuron with fib tau", block == "parietal")
+
+```
+
+## Make line graphs
+### PFC NTC
+```{r, fig.width=7, fig.height=5}
+p1 <- ggplot(data=ntcs_pfc, aes(x=Region, y=est.pop.vol, group=name, colour=name)) + 
+  geom_line()+ geom_point()+ scale_color_manual(values=viridis(3))+
+  labs(title="B",x=element_blank(), y=element_blank())+
+  theme(
+    panel.border = element_blank(),  
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_blank(),
+    axis.text=element_text(size=7),
+    legend.position="none") +
+  geom_path(size=1)+
+  scale_x_discrete(limits=c("I","II","III","IV-VI","WM"))
+#scale_y_continuous(labels=comma)
+p1
+```
+
+### PFC Neuropil
+```{r, fig.width=7, fig.height=5}
+p2 <- ggplot(data=neuropils_pfc, aes(x=Region, y=est.pop.vol, group=name, colour=name)) + 
+  geom_line()+ geom_point()+ scale_color_manual(values=viridis(3))+
+  labs(title="A",x=element_blank(), y=element_blank())+
+  theme(
+    panel.border = element_blank(),  
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_blank(),
+    axis.text=element_text(size=7),
+    legend.position="none") +
+  geom_path(size=1)+
+  scale_x_discrete(limits=c("I","II","III","IV-VI","WM"))
+#scale_y_continuous(labels=comma)
+p2
+```
+
+### PFC Neuron
+```{r, fig.width=7, fig.height=5}
+p3 <- ggplot(data=neurons_pfc, aes(x=Region, y=est.pop.vol, group=name, colour=name)) + 
+  geom_line()+ geom_point()+ scale_color_manual(values=viridis(3))+
+  labs(title="C",x=element_blank(), y=element_blank())+
+  theme(
+    panel.border = element_blank(),  
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_blank(),
+    axis.text=element_text(size=7),
+    legend.position="none") +
+  geom_path(size=1)+
+  scale_x_discrete(limits=c("I","II","III","IV-VI","WM"))
+#scale_y_continuous(labels=comma)
+p3
+```
+
+### Parietal NTC
+```{r, fig.width=7, fig.height=5}
+p4 <- ggplot(data=ntcs_parietal, aes(x=Region, y=est.pop.vol, group=name, colour=name)) + 
+  geom_line()+ geom_point()+ scale_color_manual(values=viridis(3))+
+  labs(title="E",x=element_blank(), y=element_blank())+
+  theme(
+    panel.border = element_blank(),  
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_blank(),
+    axis.text=element_text(size=7),
+    legend.position="none") +
+  geom_path(size=1)+
+  scale_x_discrete(limits=c("I","II","III","IV-VI","WM"))
+#scale_y_continuous(labels=comma)
+p4
+```
+
+### Parietal Neuropil
+```{r, fig.width=7, fig.height=5}
+p5 <- ggplot(data=neuropils_parietal, aes(x=Region, y=est.pop.vol, group=name, colour=name)) + 
+  geom_line()+ geom_point()+ scale_color_manual(values=viridis(3))+
+  labs(title="D",x=element_blank(), y=element_blank())+
+  theme(
+    panel.border = element_blank(),  
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_blank(),
+    axis.text=element_text(size=7),
+    legend.position="none") +
+  geom_path(size=1)+
+  scale_x_discrete(limits=c("I","II","III","IV-VI","WM"))
+#scale_y_continuous(labels=comma)
+p5
+```
+
+### Parietal Neuron
+```{r, fig.width=7, fig.height=5}
+p6 <- ggplot(data=neurons_parietal, aes(x=Region, y=est.pop.vol, group=name, colour=name)) + 
+  geom_line()+ geom_point()+ scale_color_manual(values=viridis(3))+
+  labs(title="F",x=element_blank(), y=element_blank())+
+  theme(
+    panel.border = element_blank(),  
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_blank(),
+    axis.text=element_text(size=7),
+    legend.position="none") +
+  geom_path(size=1)+
+  scale_x_discrete(limits=c("I","II","III","IV-VI","WM"))
+#scale_y_continuous(labels=comma)
+p6
+```
+##arrange on page
+```{r, fig.width=10, fig.height=10}
+all3<-ggarrange(p2, p5, p1, p4, p3, p6, nrow=3, ncol=2, common.legend = TRUE, legend="right")
+
+all3<-annotate_figure(all3, left=text_grob("Estimated population / volume "~(cm^3),rot = 90))
+all3
+#ggsave("LinePlot_ParietalPFC_220318.png", plot=all3, dpi=500)
+```
